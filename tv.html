@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Laddington Manor</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link rel="shortcut icon" href="favicon.ico">
+  <style>
+    html {
+      height: 100%;
+    }
+    body {
+      background-color: #000;
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+
+    main {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    main > img {
+      width: 90%;
+      max-width: 689px;
+      margin: auto;
+      z-index: 200;
+    }
+
+    iframe {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      opacity: 0.5;
+    }
+	  
+	.inverted {
+	  filter: invert(100%);
+	}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
+</head>
+<body>
+  <main id="app">
+    <iframe width="100%" height="100%" :src="youtubeUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <img src="/logo.png" :class="{ inverted: !invertLogo }">
+  </main>
+    <script>
+    'use strict';
+    const defaultVisualisationCode = 'jVD67pMdv9k';
+    const app = new Vue({
+      el: '#app',
+      data: {
+        ytCode: defaultVisualisationCode
+      },
+      computed: {
+        youtubeUrl() {
+          return 'https://www.youtube.com/embed/' + this.ytCode + '?rel=0&amp;controls=0&amp; showinfo=0';
+        },
+        invertLogo() {
+          return this.urlParams.get('invert') === 'true';
+        },
+        urlParams() {
+          return new URLSearchParams(window.location.search);
+        }
+      },
+      methods: {
+        openSong() {
+          alert('yeet');
+        }
+      },
+      mounted: function () {
+        if (this.urlParams.get('customVideo')) {
+          const url = prompt('Please enter a Youtube URL', this.urlParams.get('customVideo'));
+          this.ytCode = (new URL(url)).searchParams.get('v') || defaultVisualisationCode;
+        }
+      }
+    });
+  </script>
+</body>
+</html>
