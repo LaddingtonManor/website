@@ -32,6 +32,7 @@
       max-width: 689px;
       margin: auto;
       z-index: 200;
+      pointer-events: none;
     }
 
     iframe {
@@ -44,44 +45,35 @@
 	  filter: invert(100%);
 	}
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17/vue.js"></script>
 </head>
 <body>
   <main id="app">
-    <iframe width="100%" height="100%" :src="youtubeUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    <img src="/logo.png" :class="{ inverted: !invertLogo }">
+    <iframe id="yt-iframe" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <img id="logo" src="/logo.png">
   </main>
-    <script>
+  <script>
     'use strict';
     const defaultVisualisationCode = 'jVD67pMdv9k';
-    const app = new Vue({
-      el: '#app',
-      data: {
-        ytCode: defaultVisualisationCode
-      },
-      computed: {
-        youtubeUrl() {
-          return 'https://www.youtube.com/embed/' + this.ytCode + '?rel=0&amp;controls=0&amp; showinfo=0';
-        },
-        invertLogo() {
-          return this.urlParams.get('invert') === 'true';
-        },
-        urlParams() {
-          return new URLSearchParams(window.location.search);
-        }
-      },
-      methods: {
-        openSong() {
-          alert('yeet');
-        }
-      },
-      mounted: function () {
-        if (this.urlParams.get('customVideo')) {
-          const url = prompt('Please enter a Youtube URL', this.urlParams.get('customVideo'));
-          this.ytCode = (new URL(url)).searchParams.get('v') || defaultVisualisationCode;
-        }
+    
+    const params = new URLSearchParams(window.location.search);
+    
+    const logo = document.getElementById('logo');
+    if (params.get('invert') === null || params.get('invert') === 'false') logo.classList.add('inverted');
+    
+    let ytCode = defaultVisualisationCode;
+    const vid = params.get('customVideo');
+    if (vid !== null) {
+      const url = prompt('Please enter a Youtube URL', vid);
+      try {
+        ytCode = (new URL(url)).searchParams.get('v');
       }
-    });
+      catch (error) {
+        alert('Could not parse URL. Defaulting to fractal animation.')
+      }
+    }
+
+    const iframe = document.getElementById('yt-iframe');
+    iframe.src = 'https://www.youtube.com/embed/' + ytCode + '?autoplay=1&rel=0&controls=0&showinfo=0&color=white&modestbranding=1&enablejsapi=1'
   </script>
 </body>
 </html>
