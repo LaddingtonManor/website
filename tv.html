@@ -75,7 +75,7 @@
     const iframe = document.getElementById('yt-iframe');
     iframe.src = 'https://www.youtube.com/embed/' + ytCode
       + '?autoplay=1&rel=0&controls=0&showinfo=0&color=white&modestbranding=1&enablejsapi=1'
-      + (params.get('loop') !== null) ? 'loop=1' : ''; 
+      + (params.get('loop') !== null ? '&loop=1' : ''); 
   </script>
 </body>
 </html>
